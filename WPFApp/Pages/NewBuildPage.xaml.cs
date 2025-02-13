@@ -460,38 +460,33 @@ namespace WPFApp.Pages
                 TextBoxTotalPrice.Content = "Total price:";
             }
         }
+
         private void SaveBuild()
         {
-            if (Build.Id == -1)
-            {
-                ComponentsDB.Builds.Add(new()
-                {
-                    Name = BuildNameTextBox.Text,
-                    CPUId = SelectedCPU.Id,
-                    GPUId = SelectedGPU.Id,
-                    MotherboardId = SelectedMB.Id,
-                    PowerSupplyId = SelectedPS.Id,
-                    RAMId = SelectedRAM.Id,
-                    StorageId = SelectedStorage.Id,
-                    PCCaseId = SelectedCase.Id,
-                    CPUCoolerId = SelectedCC.Id,
-                    BuildTotalPrice = Math.Round(TotalPrice, 2)
-                });
-            }
-            else
-            {
-                Build.CPUId = SelectedCPU.Id;
-                Build.GPUId = SelectedGPU.Id;
-                Build.MotherboardId = SelectedMB.Id;
-                Build.PowerSupplyId = SelectedPS.Id;
-                Build.RAMId = SelectedRAM.Id;
-                Build.StorageId = SelectedStorage.Id;
-                Build.PCCaseId = SelectedCase.Id;
-                Build.CPUCoolerId = SelectedCC.Id;
-                Build.BuildTotalPrice = Math.Round(TotalPrice, 2);
-            }
+            var isNew = Build.Id == -1;
+            var currentBuild = isNew
+                ? new Build()
+                : Build;
+
+            if (isNew)
+                currentBuild.Name = BuildNameTextBox.Text;
+
+            currentBuild.CPUId = SelectedCPU.Id;
+            currentBuild.GPUId = SelectedGPU.Id;
+            currentBuild.MotherboardId = SelectedMB.Id;
+            currentBuild.PowerSupplyId = SelectedPS.Id;
+            currentBuild.RAMId = SelectedRAM.Id;
+            currentBuild.StorageId = SelectedStorage.Id;
+            currentBuild.PCCaseId = SelectedCase.Id;
+            currentBuild.CPUCoolerId = SelectedCC.Id;
+            currentBuild.BuildTotalPrice = Math.Round(TotalPrice, 2);
+
+            if (isNew)
+                ComponentsDB.Builds.Add(currentBuild);
+
             ComponentsDB.SaveChanges();
         }
+
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (BuildNameTextBox.Text != string.Empty || Build.Id != -1)
