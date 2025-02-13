@@ -1,0 +1,52 @@
+﻿<UserControl
+    x:Class="WPFApp.Pages.MainMenuPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WPFApp.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="1920"
+    Height="1080"
+    mc:Ignorable="d">
+    <UserControl.Background>
+        <ImageBrush ImageSource="../Resources/MainWindowBG.jpg" />
+    </UserControl.Background>
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Width" Value="400" />
+                <Setter Property="Height" Value="100" />
+                <Setter Property="Margin" Value="0,40,0,0" />
+                <Setter Property="FontSize" Value="40" />
+                <Setter Property="Background" Value="#33DDDDDD" />
+            </Style>
+        </Grid.Resources>
+        <Button
+            x:Name="NBButton"
+            Grid.Row="0"
+            Click="NBButton_Click"
+            Content="New Build" />
+        <Button
+            x:Name="SBButton"
+            Grid.Row="1"
+            Click="SBButton_Click"
+            Content="Saved Builds" />
+        <Button
+            x:Name="NPButton"
+            Grid.Row="2"
+            Background="#33DDDDDD"
+            Click="NPButton_Click"
+            Content="New component" />
+        <Button
+            x:Name="ExitButton"
+            Grid.Row="3"
+            Click="ExitButton_Click"
+            Content="Exit" />
+    </Grid>
+</UserControl>

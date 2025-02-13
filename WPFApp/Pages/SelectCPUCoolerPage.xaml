@@ -1,0 +1,188 @@
+﻿<main:ObservableUserControl
+    x:Class="WPFApp.Pages.SelectCPUCoolerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WPFApp.Pages"
+    xmlns:main="clr-namespace:WPFApp"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="1920"
+    Height="1080"
+    mc:Ignorable="d">
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="100" />
+        </Grid.ColumnDefinitions>
+        <StackPanel
+            Grid.Column="1"
+            VerticalAlignment="Center"
+            Orientation="Vertical">
+            <ListBox
+                x:Name="ListBoxCC"
+                Height="400"
+                ItemsSource="{Binding CCList}"
+                SelectedItem="{Binding SelectedCC}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBlock Text="{Binding SelectedCC.Name}" />
+            <Button
+                x:Name="ButtonChooseComponent"
+                Height="50"
+                Margin="0,10,0,10"
+                Click="ButtonChooseComponent_Click"
+                Content="Вибрати"
+                FontSize="24" />
+        </StackPanel>
+        <Grid Grid.Column="3" Height="600">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBox
+                x:Name="tbBrand"
+                Grid.Row="0"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                IsReadOnly="True" />
+            <TextBox
+                x:Name="tbType"
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                IsReadOnly="True" />
+            <TextBox
+                x:Name="tbSoсket"
+                Grid.Row="2"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                IsReadOnly="True" />
+            <TextBox
+                x:Name="tbFanSpeed"
+                Grid.Row="3"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                IsReadOnly="True" />
+            <TextBox
+                x:Name="tbNoiseLevel"
+                Grid.Row="4"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                IsReadOnly="True" />
+            <TextBox
+                x:Name="tbAirflow"
+                Grid.Row="5"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                IsReadOnly="True" />
+            <TextBox
+                x:Name="tbDimensions"
+                Grid.Row="6"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                IsReadOnly="True" />
+            <TextBox
+                x:Name="tbPrice"
+                Grid.Row="7"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                IsReadOnly="True" />
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Brand"
+                FontSize="24" />
+            <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Type"
+                FontSize="24" />
+            <Label
+                Grid.Row="2"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Soсket"
+                FontSize="24" />
+            <Label
+                Grid.Row="3"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="FanSpeed"
+                FontSize="24" />
+            <Label
+                Grid.Row="4"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="NoiseLevel"
+                FontSize="24" />
+            <Label
+                Grid.Row="5"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Airflow"
+                FontSize="24" />
+            <Label
+                Grid.Row="6"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Dimensions"
+                FontSize="24" />
+            <Label
+                Grid.Row="7"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Price"
+                FontSize="24" />
+        </Grid>
+        <Image
+            x:Name="ImgUrl"
+            Grid.Column="5"
+            Width="600"
+            Height="auto" />
+    </Grid>
+</main:ObservableUserControl>
