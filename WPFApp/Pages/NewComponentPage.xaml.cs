@@ -10,17 +10,15 @@ using System.Windows.Data;
 
 namespace WPFApp.Pages
 {
-    public partial class NewComponentPage : ObservableUserControl
+    public partial class NewComponentPage : ObservableUserControl, INotifyPropertyChanged
     {
-        public event EventHandler PageClosed;
-
         public ComponentsDBContext ComponentsDB { get; set; }
 
         private List<DataGrid> DataGrids = [];
         private List<StackPanel> StackPanels = [];
+        public ICommand SearchCommand { get; set; }
 
         private string _searchFilter;
-
         public string SearchFilter
         {
             get => _searchFilter;
@@ -28,7 +26,6 @@ namespace WPFApp.Pages
             {
                 _searchFilter = value;
                 OnPropertyChanged(nameof(SearchFilter));
-                ApplyFilter();
             }
         }
 
@@ -46,6 +43,8 @@ namespace WPFApp.Pages
 
         #endregion
 
+      
+
         public NewComponentPage()
         {
             DataContext = this;
@@ -53,16 +52,21 @@ namespace WPFApp.Pages
             ComponentsDB = new ComponentsDBContext();
 
             ReturnCommand = new RelayCommand(ReturnCommandExecute);
+            SearchCommand = new RelayCommand(ExecuteSearch);
 
             InitializeComponent();
 
             SetUpData();
 
             SetUpPanels();
-           
+
             SetUp();
 
             InitializeCollectionsView();
+        }
+        private void ExecuteSearch()
+        {
+            ApplyFilter();
         }
 
 
@@ -70,34 +74,111 @@ namespace WPFApp.Pages
 
         public ObservableCollection<CPU> CPUList { get; init; } = new();
 
-        public ICollectionView CPUCollectionView { get; set; }
-
+        private ICollectionView _cpuCollectionView;
+        public ICollectionView CPUCollectionView
+        {
+            get => _cpuCollectionView;
+            set
+            {
+                _cpuCollectionView = value;
+                OnPropertyChanged(nameof(CPUCollectionView));
+            }
+        }
+       
         public ObservableCollection<GPU> GPUList { get; init; } = new();
 
-        public ICollectionView GPUCollectionView { get; set; }
+        private ICollectionView _gpuCollectionView;
+        public ICollectionView GPUCollectionView
+        {
+            get => _gpuCollectionView;
+            set
+            {
+                _gpuCollectionView = value;
+                OnPropertyChanged(nameof(GPUCollectionView));
+            }
+        }
 
         public ObservableCollection<Motherboard> MBList { get; init; } = new();
-        public ICollectionView MBCollectionView { get; set; }
 
+        private ICollectionView _mbCollectionView;
+        public ICollectionView MBCollectionView
+        {
+            get => _mbCollectionView;
+            set
+            {
+                _mbCollectionView = value;
+                OnPropertyChanged(nameof(MBCollectionView));
+            }
+        }
 
         public ObservableCollection<RAM> RAMList { get; init; } = new();
-        public ICollectionView RAMCollectionView { get; set; }
+
+        private ICollectionView _ramCollectionView;
+        public ICollectionView RAMCollectionView
+        {
+            get => _ramCollectionView;
+            set
+            {
+                _ramCollectionView = value;
+                OnPropertyChanged(nameof(RAMCollectionView));
+            }
+        }
 
 
         public ObservableCollection<CPUCooler> CCList { get; init; } = new();
-        public ICollectionView CCCollectionView { get; set; }
+
+        private ICollectionView _ccCollectionView;
+        public ICollectionView CCCollectionView 
+        {
+            get => _ccCollectionView;
+            set 
+            {
+                _ccCollectionView = value;
+                OnPropertyChanged(nameof(CCCollectionView));
+            }
+                 
+        }
 
 
         public ObservableCollection<PCCase> CaseList { get; init; } = new();
-        public ICollectionView CaseCollectionView { get; set; }
+       
+        private ICollectionView _pcCaseCollectionView;
+        public ICollectionView CaseCollectionView
+        {
+            get => _pcCaseCollectionView;
+            set
+            {
+                _pcCaseCollectionView= value;
+                OnPropertyChanged(nameof(CaseCollectionView));
+            }
+        }    
 
 
         public ObservableCollection<PowerSupply> PSList { get; init; } = new();
 
-        public ICollectionView PSCollectionView { get; set; }
+        private ICollectionView _powerSupplyCollectionView;
+        public ICollectionView PSCollectionView
+        {
+            get => _powerSupplyCollectionView;
+            set
+            {
+                _powerSupplyCollectionView= value;
+                OnPropertyChanged(nameof(PSCollectionView));
+            }
+        }
 
         public ObservableCollection<Storage> StorageList { get; init; } = new();
-        public ICollectionView PSStorageCollectionView { get; set; }
+
+        private ICollectionView _psStorageCollectionView;
+        public ICollectionView PSStorageCollectionView
+        {
+            get => _psStorageCollectionView;
+            set
+            {
+                _psStorageCollectionView= value;
+                OnPropertyChanged(nameof(PSStorageCollectionView));
+            }
+        }
 
 
         #endregion CollectionsAndViews
@@ -222,8 +303,11 @@ namespace WPFApp.Pages
 
         public void SetUp()
         {
+          
+
             foreach (var cpu in ComponentsDB.CPUs)
                 CPUList.Add(cpu);
+           
 
             foreach (var gpu in ComponentsDB.GPUs)
                 GPUList.Add(gpu);
@@ -246,7 +330,6 @@ namespace WPFApp.Pages
             foreach (var storage in ComponentsDB.Storages)
                 StorageList.Add(storage);
         }
-
         private void InitializeCollectionsView()
         {
             CPUCollectionView = CollectionViewSource.GetDefaultView(CPUList);
@@ -264,29 +347,36 @@ namespace WPFApp.Pages
 
         #region Filter
 
-       private void ApplyFilter()
+        private void ApplyFilter()
         {
             var filterText = SearchFilter?.ToLower() ?? string.Empty;
 
-            // Change Func<object, bool> to Predicate<object> for ICollectionView.Filter compatibility
             Predicate<object> filter = item =>
             {
                 if (item is CPU cpu)
-                    return cpu.Name.ToLower().Contains(filterText) || cpu.Brand.ToLower().Contains(filterText);
+                    return cpu.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
+                           cpu.Brand.Contains(filterText, StringComparison.OrdinalIgnoreCase);
                 if (item is GPU gpu)
-                    return gpu.Name.ToLower().Contains(filterText) || gpu.Brand.ToLower().Contains(filterText);
+                    return gpu.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
+                           gpu.Brand.Contains(filterText, StringComparison.OrdinalIgnoreCase);
                 if (item is Motherboard mb)
-                    return mb.Name.ToLower().Contains(filterText) || mb.Brand.ToLower().Contains(filterText);
+                    return mb.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
+                           mb.Brand.Contains(filterText, StringComparison.OrdinalIgnoreCase);
                 if (item is RAM ram)
-                    return ram.Name.ToLower().Contains(filterText) || ram.Brand.ToLower().Contains(filterText);
+                    return ram.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
+                           ram.Brand.Contains(filterText, StringComparison.OrdinalIgnoreCase);
                 if (item is CPUCooler cc)
-                    return cc.Name.ToLower().Contains(filterText) || cc.Brand.ToLower().Contains(filterText);
+                    return cc.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
+                           cc.Brand.Contains(filterText, StringComparison.OrdinalIgnoreCase);
                 if (item is PCCase pcc)
-                    return pcc.Name.ToLower().Contains(filterText) || pcc.Brand.ToLower().Contains(filterText);
+                    return pcc.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
+                           pcc.Brand.Contains(filterText, StringComparison.OrdinalIgnoreCase);
                 if (item is PowerSupply ps)
-                    return ps.Name.ToLower().Contains(filterText) || ps.Brand.ToLower().Contains(filterText);
+                    return ps.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
+                           ps.Brand.Contains(filterText, StringComparison.OrdinalIgnoreCase);
                 if (item is Storage storage)
-                    return storage.Name.ToLower().Contains(filterText) || storage.Brand.ToLower().Contains(filterText);
+                    return storage.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase) ||
+                           storage.Brand.Contains(filterText, StringComparison.OrdinalIgnoreCase);
                 return false;
             };
 
@@ -332,8 +422,8 @@ namespace WPFApp.Pages
         private void RemoveItemCPU()
         {
             if (SelectedCPU != null)
-            { ComponentsDB.CPUs.Remove(SelectedCPU); }
-            else { ComponentsDB.SaveChanges(); }
+                ComponentsDB.CPUs.Remove(SelectedCPU);
+
             ComponentsDB.SaveChanges();
             CPUList.Remove(SelectedCPU);
         }
@@ -369,10 +459,10 @@ namespace WPFApp.Pages
         }
 
         private void RemoveItemGPU()
-        {   if (SelectedGPU != null)
-            { ComponentsDB.GPUs.Remove(SelectedGPU); }
-            else
-            { ComponentsDB.SaveChanges(); }
+        {   
+            if (SelectedGPU != null)
+                ComponentsDB.GPUs.Remove(SelectedGPU);
+
             ComponentsDB.SaveChanges();
             GPUList.Remove(SelectedGPU);
         }
@@ -404,8 +494,10 @@ namespace WPFApp.Pages
         }
 
         private void RemoveItemRAM()
-        {   if (SelectedRAM != null) ComponentsDB.RAMs.Remove(SelectedRAM);
-            else ComponentsDB.SaveChanges(); 
+        {   
+            if (SelectedRAM != null) 
+                ComponentsDB.RAMs.Remove(SelectedRAM);
+
             ComponentsDB.SaveChanges();
             RAMList.Remove(SelectedRAM);
         }
@@ -440,8 +532,10 @@ namespace WPFApp.Pages
         }
 
         private void RemoveItemMB()
-        {   if (SelectedMB != null) ComponentsDB.Motherboards.Remove(SelectedMB); 
-            else ComponentsDB.SaveChanges();
+        {   
+            if (SelectedMB != null) 
+                ComponentsDB.Motherboards.Remove(SelectedMB); 
+
             ComponentsDB.SaveChanges();
             MBList.Remove(SelectedMB);
         }
@@ -472,9 +566,10 @@ namespace WPFApp.Pages
         }
 
         private void RemoveItemCase()
-        {   if(SelectedPCCase != null) ComponentsDB.PCCases.Remove(SelectedPCCase);
-            else ComponentsDB.SaveChanges();
-            ComponentsDB.PCCases.Remove(SelectedPCCase);
+        {   
+            if (SelectedPCCase != null) 
+                ComponentsDB.PCCases.Remove(SelectedPCCase);
+
             ComponentsDB.SaveChanges();
             CaseList.Remove(SelectedPCCase);
         }
@@ -507,8 +602,10 @@ namespace WPFApp.Pages
         }
 
         private void RemoveItemCC()
-        {   if (SelectedCC != null) ComponentsDB.CPUCoolers.Remove(SelectedCC); 
-            else ComponentsDB.SaveChanges();
+        {   
+            if (SelectedCC != null)
+                ComponentsDB.CPUCoolers.Remove(SelectedCC); 
+
             ComponentsDB.SaveChanges();
             CCList.Remove(SelectedCC);
         }
@@ -540,8 +637,10 @@ namespace WPFApp.Pages
         }
 
         private void RemoveItemPS()
-        {   if(SelectedPS != null) ComponentsDB.PowerSupplies.Remove(SelectedPS);
-            else ComponentsDB.SaveChanges();
+        {   
+            if (SelectedPS != null) 
+                ComponentsDB.PowerSupplies.Remove(SelectedPS);
+
             ComponentsDB.SaveChanges();
             PSList.Remove(SelectedPS);
         }
@@ -573,13 +672,16 @@ namespace WPFApp.Pages
         }
 
         private void RemoveItemStorage()
-        {   if (SelectedStorage != null) ComponentsDB.Storages.Remove(SelectedStorage);
-            else ComponentsDB.SaveChanges();
+        {   
+            if (SelectedStorage != null) 
+                ComponentsDB.Storages.Remove(SelectedStorage);
+
             ComponentsDB.SaveChanges();
             StorageList.Remove(SelectedStorage);
         }
 
         #endregion Storage Commands
+
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -590,15 +692,18 @@ namespace WPFApp.Pages
 
                 foreach (DataGrid dataGrid in DataGrids)
                 {
-                    dataGrid.Visibility = (dataGrid.Tag as string) == selectedItem ? Visibility.Visible : Visibility.Collapsed;
+                    dataGrid.Visibility = (dataGrid.Tag as string) == selectedItem ? Visibility.Visible : Visibility.Hidden;
                 }
 
                 foreach (StackPanel stackPanel in StackPanels)
                 {
-                    stackPanel.Visibility = (stackPanel.Tag as string) == selectedItem ? Visibility.Visible : Visibility.Collapsed;
+                    stackPanel.Visibility = (stackPanel.Tag as string) == selectedItem ? Visibility.Visible : Visibility.Hidden;
                 }
+                CPUCollectionView.Refresh();
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
-
