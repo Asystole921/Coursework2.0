@@ -49,56 +49,55 @@ namespace WPFApp
         {
             NewBuildPage.SetUp(e.Build);
 
-            SavedBuildsPage.Visibility = Visibility.Hidden;
-            NewBuildPage.Visibility = Visibility.Visible;
+            SwapPages(SavedBuildsPage, NewBuildPage);
         }
 
         private void OnSavedBuildsPageReturnCommandExecuted(object? sender, EventArgs e)
         {
-            SavedBuildsPage.Visibility = Visibility.Hidden;
-            MainMenuPage.Visibility = Visibility.Visible;
+            SwapPages(SavedBuildsPage, MainMenuPage);
         }
 
         private void OnNewBuildBackToMainMenu(object? sender, EventArgs e)
         {
-            NewBuildPage.Visibility = Visibility.Hidden;
-            MainMenuPage.Visibility = Visibility.Visible;
+            SwapPages(NewBuildPage, MainMenuPage);
         }
         private void OnNewBuildBackToSavedBuilds(object? sender, EventArgs e)
         {
-            NewBuildPage.Visibility = Visibility.Hidden;
-            SavedBuildsPage.Visibility = Visibility.Visible;
+            SwapPages(NewBuildPage, SavedBuildsPage);
             SavedBuildsPage.SetUp();
         }
 
         private void OnNewComponentsPageClosed(object? sender, EventArgs e)
         {
-            NewComponentPage.Visibility = Visibility.Hidden;
-            MainMenuPage.Visibility = Visibility.Visible;
+            SwapPages(NewComponentPage, MainMenuPage);
         }
 
         private void OnSavedBuildsPageClick(object? sender, EventArgs e)
         {
-            MainMenuPage.Visibility = Visibility.Hidden;
-            SavedBuildsPage.Visibility = Visibility.Visible;
+            SwapPages(MainMenuPage, SavedBuildsPage);
             SavedBuildsPage.SetUp();
         }
         private void OnNewComponentPageClick(object? sender, EventArgs e)
         {
-            MainMenuPage.Visibility = Visibility.Hidden;
-            NewComponentPage.Visibility = Visibility.Visible;
+            SwapPages(MainMenuPage, NewComponentPage);
             NewComponentPage.SetUp();
         }
 
         private void OnNewBuildPageClick(object? sender, EventArgs e)
         {
-            MainMenuPage.Visibility = Visibility.Hidden;
-            NewBuildPage.Visibility = Visibility.Visible;
+            SwapPages(MainMenuPage, NewBuildPage);
             NewBuildPage.SetUp(new() { Id = -1 });
         }
+
         private void OnExitClick(object? sender, EventArgs e)
         {
             Close();
+        }
+
+        public static void SwapPages(UserControl currentPage, UserControl nextPage)
+        {
+            currentPage.Visibility = Visibility.Hidden;
+            nextPage.Visibility = Visibility.Visible;
         }
     }
 }
